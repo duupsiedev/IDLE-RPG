@@ -51,4 +51,4 @@ Money purchases access and playthrough infrastructure. Five regions and ten hous
 
 ## Current implementation boundary
 
-Batch one establishes character creation, the application shell, versioned state, all planned job/skill/housing slots, and a small working Jobs/Skills/Shop slice. Combat progression and saving are intentionally reserved for later batches.
+Batch one established character creation, the application shell, versioned state, all planned job/skill/housing slots, and a small working Jobs/Skills/Shop slice. Batch two added automatic starter-region combat, retaliation, recovery, repeat farming, and permanent diminishing stat rewards. Batch three adds versioned local saves, migrations, autosaving, and up to seven days of offline progress using the same time engine as live play.

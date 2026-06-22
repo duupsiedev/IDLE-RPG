@@ -61,9 +61,15 @@
   ].map(([name, cost, morale], index) => ({ id: `house-${index + 1}`, name, tier: index + 1, cost, morale }));
 
   const STARTER_MONSTERS = [
-    ["cellar-rat", "Cellar Rat", "dexterity"], ["wild-dog", "Wild Dog", "agility"], ["road-bandit", "Road Bandit", "strength"],
-    ["bog-slime", "Bog Slime", "vitality"], ["hedge-witch", "Hedge Witch", "mind"], ["ruined-golem", "Ruined Golem", "constitution"]
-  ].map(([id, name, rewardStat], index) => ({ id, name, regionId: "region-1", rank: index + 1, rewardStat }));
+    ["cellar-rat", "Cellar Rat", "dexterity", 14, 1.2, 0, 1.8, .08],
+    ["wild-dog", "Wild Dog", "agility", 30, 2.1, .2, 1.45, .11],
+    ["road-bandit", "Road Bandit", "strength", 58, 3.6, .7, 1.7, .16],
+    ["bog-slime", "Bog Slime", "vitality", 90, 5.2, 1.2, 2.1, .22],
+    ["hedge-witch", "Hedge Witch", "mind", 130, 7.2, 1.8, 1.65, .3],
+    ["ruined-golem", "Ruined Golem", "constitution", 190, 10, 3, 2.25, .42]
+  ].map(([id, name, rewardStat, hp, damage, defense, attackInterval, reward], index) => ({
+    id, name, regionId: "region-1", rank: index + 1, rewardStat, hp, damage, defense, attackInterval, reward
+  }));
 
   return { STATS, CLASSES, ORIGINS, JOBS, SKILLS, REGIONS, HOUSES, STARTER_MONSTERS };
 });

@@ -13,7 +13,7 @@ assert.equal(Content.HOUSES.length, 10, "ten housing tiers are defined");
 assert.equal(Content.STARTER_MONSTERS.length, 6, "the starter region has six monsters");
 
 const warrior = State.createNewGame("warrior", "fallen-noble");
-assert.equal(warrior.schemaVersion, 1, "new saves have a schema version");
+assert.equal(warrior.schemaVersion, 3, "new saves have the current schema version");
 assert.ok(warrior.stats.strength > warrior.stats.intelligence, "class bonuses apply to the intended stats");
 Progression.tick(warrior, 60);
 assert.ok(warrior.resources.money > 0, "jobs generate money");
