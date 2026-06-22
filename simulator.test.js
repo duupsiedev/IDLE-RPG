@@ -1,0 +1,27 @@
+const assert = require("node:assert/strict");
+const Sim = require("./simulator.js");
+const Analysis = require("./lifetime-analysis.js");
+
+const hour = Sim.simulate(1 / 24);
+const day = Sim.simulate(1);
+const week = Sim.simulate(7);
+const month = Sim.simulate(30);
+const sixMonths = Sim.simulate(180);
+assert.ok(hour.power > 10, "a character should gain power in the first hour");
+assert.ok(week.power > hour.power, "longer simulations should produce more power");
+assert.ok(week.state.events.some(e => e.type === "map"), "a week should contain a map unlock");
+assert.ok(week.state.events.some(e => e.type === "house"), "a week should contain a housing upgrade");
+assert.ok(week.state.stats.strength > 1, "monster victories should grant permanent stats");
+assert.equal(week.state.stats.intelligence >= 1, true, "all nine starter stats remain valid");
+assert.equal(day.state.map, 1, "the first day should still be in Oldwood");
+assert.equal(week.state.map, 2, "the first week should reach the Highlands");
+assert.ok(month.state.map >= 2, "a typical month should reach at least the Highlands");
+assert.equal(sixMonths.state.map, 3, "six months should reach the Ashlands");
+assert.ok(Sim.simulate(7, { monsterStats: 1.5 }).power > week.power, "reward tuning should affect long-term power");
+const range = Analysis.run(30);
+assert.equal(range.results.length, 12, "the lifetime range should cover two schedules for six playstyles");
+assert.ok(range.power.max > range.power.min, "different paths should produce a real power range");
+assert.ok(range.results.some(r => r.scenario.strategyId === "inefficient"), "inefficient valid paths must be represented");
+assert.equal(new Set(range.results.map(r => r.scenario.classId)).size, 3, "all starter classes must be represented");
+assert.equal(new Set(range.results.map(r => r.scenario.originId)).size, 5, "all starter origins must be represented");
+console.log(`Simulation checks passed. Week power: ${week.power.toFixed(1)}, events: ${week.state.events.length}`);

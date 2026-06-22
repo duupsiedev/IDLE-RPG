@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Increment Kingdom — Progression Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">BALANCE WORKBENCH</p>
+        <h1>Progression Lab</h1>
+        <p class="lede">Fast-forward representative characters and expose breakthroughs, walls, and overly precise optimal paths.</p>
+      </div>
+      <div class="controls">
+        <label>Simulate for
+          <select id="duration">
+            <option value="0.0416667">1 hour</option><option value="1">1 day</option><option value="7" selected>1 week</option>
+            <option value="30">1 month</option><option value="180">6 months</option><option value="365">1 year</option>
+          </select>
+        </label>
+        <button id="run">Run simulation</button>
+      </div>
+    </header>
+    <section id="summary" class="summary" aria-live="polite"></section>
+    <section class="panel range-panel">
+      <div class="panel-title"><div><p class="eyebrow">REALISTIC RANGE</p><h2>Milestone windows across six playstyles</h2></div><p class="muted">Two seeded schedules each: 12 paths with imperfect choices.</p></div>
+      <div id="ranges" class="ranges"></div>
+    </section>
+    <section class="panel chart-panel">
+      <div class="panel-title"><div><p class="eyebrow">PACE</p><h2>Character power over time</h2></div><p id="pace-note" class="muted"></p></div>
+      <div id="chart" class="chart"></div>
+    </section>
+    <div class="columns">
+      <section class="panel">
+        <div class="panel-title"><div><p class="eyebrow">THE STORY</p><h2>Milestone timeline</h2></div><span id="event-count" class="pill"></span></div>
+        <div id="timeline" class="timeline"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-title"><div><p class="eyebrow">TUNING</p><h2>Balance knobs</h2></div><button id="reset" class="ghost">Reset</button></div>
+        <p class="muted">Change one control, rerun, and watch the range move.</p><div id="knobs" class="knobs"></div>
+      </section>
+    </div>
+  </main>
+  <script src="scenarios.js"></script><script src="simulator.js"></script><script src="lifetime-analysis.js"></script><script src="app.js"></script>
+</body>
+</html>

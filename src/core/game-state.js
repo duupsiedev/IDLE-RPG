@@ -1,0 +1,32 @@
+(function (root, factory) {
+  const content = typeof module === "object" && module.exports ? require("../data/game-content.js") : root.IncrementKingdomContent;
+  const api = factory(content);
+  if (typeof module === "object" && module.exports) module.exports = api;
+  else root.IncrementKingdomState = api;
+})(typeof self !== "undefined" ? self : this, function (Content) {
+  "use strict";
+
+  const SCHEMA_VERSION = 1;
+
+  function createNewGame(classId, originId) {
+    const characterClass = Content.CLASSES.find(item => item.id === classId) || Content.CLASSES[0];
+    const origin = Content.ORIGINS.find(item => item.id === originId) || Content.ORIGINS[0];
+    const stats = Object.fromEntries(Content.STATS.map(stat => [stat.id, characterClass.stats.includes(stat.id) ? 1.15 : 1]));
+    return {
+      schemaVersion: SCHEMA_VERSION,
+      createdAt: new Date().toISOString(),
+      elapsedSeconds: 0,
+      identity: { classId: characterClass.id, originId: origin.id },
+      resources: { money: 0, morale: 1 },
+      location: { regionId: Content.REGIONS[0].id },
+      stats,
+      jobs: Object.fromEntries(Content.JOBS.map(job => [job.id, { level: 0, xp: 0 }])),
+      skills: Object.fromEntries(Content.SKILLS.map(skill => [skill.id, { level: 0, xp: 0 }])),
+      activities: { jobId: Content.JOBS[0].id, skillId: Content.SKILLS[0].id, monsterId: null },
+      shop: { houseTier: 1 },
+      combat: { defeats: {} }
+    };
+  }
+
+  return { SCHEMA_VERSION, createNewGame };
+});
