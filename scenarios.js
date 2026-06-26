@@ -1,41 +1,52 @@
 (function (root, factory) {
-  const api = factory();
+  const content = typeof module === "object" && module.exports ? require("./src/data/game-content.js") : root.IncrementKingdomContent;
+  const api = factory(content);
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.IdleRpgScenarios = api;
-})(typeof self !== "undefined" ? self : this, function () {
+})(typeof self !== "undefined" ? self : this, function (Content) {
   "use strict";
 
-  const CLASSES = {
-    warrior: { name: "Warrior", stats: { strength: 1.25, constitution: 1.2 }, combat: 1.08 },
-    mage: { name: "Mage", stats: { intelligence: 1.3, mind: 1.2 }, combat: 1.04 },
-    hunter: { name: "Hunter", stats: { dexterity: 1.25, agility: 1.2, luck: 1.2 }, combat: 1.06 }
-  };
-
-  const ORIGINS = {
-    commoner: { name: "Commoner", globalXp: 1.05 },
-    scholar: { name: "Scholar", skillXp: 1.12 },
-    nomad: { name: "Nomad", jobXp: 1.08 },
-    ranger: { name: "Ranger", monsterStats: 1.1 },
-    "fallen-noble": { name: "Fallen Noble", jobIncome: 1.08 }
-  };
+  const byId = (items, id, fallback) => items.find(item => item.id === id) || fallback;
 
   const STRATEGIES = {
     optimizer: {
-      name: "Optimizer", decisionHours: .08, monsterLag: 0, shopOrder: "maps", skillPlan: "balanced"
+      name: "Optimizer",
+      decisionHours: .08,
+      monsterLag: 0,
+      shopOrder: "balanced",
+      skillPlan: "gates",
+      overFarm: 0,
+      offlineEfficiency: 1
     },
     typical: {
-      name: "Typical", decisionHours: 6, monsterLag: 0, shopOrder: "maps", skillPlan: "balanced"
+      name: "Typical",
+      decisionHours: 6,
+      monsterLag: 0,
+      shopOrder: "balanced",
+      skillPlan: "balanced",
+      overFarm: 3,
+      offlineEfficiency: .92
     },
     casual: {
-      name: "Casual", decisionHours: 24, monsterLag: 0, shopOrder: "housing", skillPlan: "balanced"
+      name: "Casual",
+      decisionHours: 24,
+      monsterLag: 0,
+      shopOrder: "housing",
+      skillPlan: "balanced",
+      overFarm: 10,
+      offlineEfficiency: .78
     },
     inefficient: {
-      name: "Inefficient but valid", decisionHours: 36, monsterLag: 1, shopOrder: "housing", skillPlan: "favorite"
+      name: "Inefficient but valid",
+      decisionHours: 36,
+      monsterLag: 1,
+      shopOrder: "housing",
+      skillPlan: "favorite",
+      overFarm: 25,
+      offlineEfficiency: .68
     }
   };
 
-  // A deliberately compact sample: enough variety to expose brittle balance without
-  // turning every dashboard run into a combinatorial research project.
   const REPRESENTATIVE_SCENARIOS = [
     { id: "fast", classId: "warrior", originId: "ranger", strategyId: "optimizer" },
     { id: "typical-warrior", classId: "warrior", originId: "commoner", strategyId: "typical" },
@@ -47,17 +58,20 @@
 
   function resolve(input) {
     const value = input || REPRESENTATIVE_SCENARIOS[1];
+    const characterClass = byId(Content.CLASSES, value.classId, Content.CLASSES[0]);
+    const origin = byId(Content.ORIGINS, value.originId, Content.ORIGINS[0]);
+    const strategy = STRATEGIES[value.strategyId] || STRATEGIES.typical;
     return {
       id: value.id || "custom",
-      classId: value.classId,
-      originId: value.originId,
-      strategyId: value.strategyId,
+      classId: characterClass.id,
+      originId: origin.id,
+      strategyId: Object.keys(STRATEGIES).find(key => STRATEGIES[key] === strategy) || "typical",
       seed: value.seed || 1,
-      class: CLASSES[value.classId] || CLASSES.warrior,
-      origin: ORIGINS[value.originId] || ORIGINS.commoner,
-      strategy: STRATEGIES[value.strategyId] || STRATEGIES.typical
+      class: characterClass,
+      origin,
+      strategy
     };
   }
 
-  return { CLASSES, ORIGINS, STRATEGIES, REPRESENTATIVE_SCENARIOS, resolve };
+  return { STRATEGIES, REPRESENTATIVE_SCENARIOS, resolve };
 });

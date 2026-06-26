@@ -8,11 +8,11 @@
   "use strict";
 
   const tracked = [
-    ["Oldwood", e => e.title === "Unlocked Oldwood Map"],
+    ["Ruined Golem farm", e => e.title === "Now hunting Ruined Golem"],
     ["Cottage", e => e.title === "Moved into Cottage"],
-    ["Highlands", e => e.title === "Unlocked Highlands Map"],
+    ["Army work", e => e.type === "job" && e.detail.includes("army")],
     ["Townhouse", e => e.title === "Moved into Townhouse"],
-    ["Ashlands", e => e.title === "Unlocked Ashlands Map"],
+    ["100 power", e => e.title === "100 combat power"],
     ["Manor", e => e.title === "Moved into Manor"]
   ];
 
@@ -32,7 +32,8 @@
       power: {
         min: Math.min(...results.map(r => r.power)),
         max: Math.max(...results.map(r => r.power))
-      }
+      },
+      sludge: results.filter(r => r.sludge).map(r => r.scenario.id)
     };
   }
 

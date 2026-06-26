@@ -46,11 +46,17 @@
     return beginFight(state);
   }
 
-  function victory(state, monster) {
+  function effectiveMorale(state, tuning) {
+    const power = tuning?.housingPower ?? 1;
+    return 1 + ((state.resources.morale || 1) - 1) * power;
+  }
+
+  function victory(state, monster, tuning) {
     const previousDefeats = state.combat.defeats[monster.id] || 0;
-    const diminishing = Math.pow(1 + previousDefeats * .055, .62);
+    const diminishingRate = tuning?.diminishing ?? .055;
+    const diminishing = Math.pow(1 + previousDefeats * diminishingRate, .62);
     const originMultiplier = originOf(state).bonuses.statGain || 1;
-    const gained = monster.reward * state.resources.morale * originMultiplier / diminishing;
+    const gained = monster.reward * effectiveMorale(state, tuning) * originMultiplier * (tuning?.monsterStats || 1) / diminishing;
     state.stats[monster.rewardStat] += gained;
     state.combat.defeats[monster.id] = previousDefeats + 1;
     state.combat.phase = "respawning";
@@ -67,7 +73,7 @@
     state.combat.lastMessage = `${monster.name} defeated you. Recovering, then retrying automatically.`;
   }
 
-  function tick(state, seconds) {
+  function tick(state, seconds, tuning) {
     const monster = monsterById(state.activities.monsterId);
     if (!monster || state.combat.phase === "idle") return;
     if (state.combat.phase !== "fighting") {
@@ -84,7 +90,7 @@
       state.combat.playerAttackTimer -= player.attackInterval;
       const dealt = Math.max(.2, player.damage * player.accuracy - monster.defense);
       state.combat.monsterHp -= dealt;
-      if (state.combat.monsterHp <= 0) victory(state, monster);
+      if (state.combat.monsterHp <= 0) victory(state, monster, tuning);
     }
     while (state.combat.monsterAttackTimer >= monster.attackInterval && state.combat.phase === "fighting") {
       state.combat.monsterAttackTimer -= monster.attackInterval;

@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, "..");
 const requiredFiles = [
   "index.html", "simulator.html", "src/styles/game.css", "src/ui/game-app.js",
   "src/data/game-content.js", "src/core/game-state.js", "src/core/progression.js", "src/core/combat.js",
-  "src/core/time-engine.js", "src/core/persistence.js"
+  "src/core/time-engine.js", "src/core/persistence.js", "scenarios.js", "simulator.js", "lifetime-analysis.js", "app.js"
 ];
 
 for (const file of requiredFiles) assert.ok(fs.existsSync(path.join(root, file)), `Missing required file: ${file}`);

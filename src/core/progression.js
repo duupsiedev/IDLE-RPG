@@ -16,20 +16,25 @@
     }
   }
 
-  function tick(state, seconds) {
+  function effectiveMorale(state, tuning) {
+    const power = tuning?.housingPower ?? 1;
+    return 1 + ((state.resources.morale || 1) - 1) * power;
+  }
+
+  function tick(state, seconds, tuning) {
     const origin = getOrigin(state);
     const globalXp = origin.bonuses.globalXp || 1;
     const job = Content.JOBS.find(item => item.id === state.activities.jobId);
     const jobTrack = state.jobs[job.id];
     const incomeBonus = origin.bonuses.money || 1;
     const jobXpBonus = origin.bonuses.jobXp || 1;
-    state.resources.money += job.baseIncome * (1 + jobTrack.level * .08) * incomeBonus * seconds;
-    jobTrack.xp += job.baseXp * globalXp * jobXpBonus * state.resources.morale * seconds;
+    state.resources.money += job.baseIncome * (1 + jobTrack.level * .08) * incomeBonus * (tuning?.jobIncome || 1) * seconds;
+    jobTrack.xp += job.baseXp * globalXp * jobXpBonus * (tuning?.jobXp || 1) * effectiveMorale(state, tuning) * seconds;
     levelTrack(jobTrack);
 
     const skill = Content.SKILLS.find(item => item.id === state.activities.skillId);
     const skillTrack = state.skills[skill.id];
-    skillTrack.xp += .45 * globalXp * (origin.bonuses.skillXp || 1) * state.resources.morale * seconds;
+    skillTrack.xp += .45 * globalXp * (origin.bonuses.skillXp || 1) * (tuning?.skillXp || 1) * effectiveMorale(state, tuning) * seconds;
     levelTrack(skillTrack);
     state.elapsedSeconds += seconds;
   }
@@ -66,5 +71,5 @@
     return true;
   }
 
-  return { xpRequired, tick, canUseJob, selectJob, selectSkill, buyNextHouse };
+  return { xpRequired, tick, canUseJob, selectJob, selectSkill, buyNextHouse, effectiveMorale };
 });

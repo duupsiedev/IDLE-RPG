@@ -17,14 +17,14 @@
     };
   }
 
-  function advance(state, seconds, maximumStep) {
+  function advance(state, seconds, maximumStep, tuning) {
     const before = totals(state);
     let remaining = Math.max(0, Number(seconds) || 0);
     const stepSize = Math.max(.1, maximumStep || 1);
     while (remaining > 0) {
       const step = Math.min(stepSize, remaining);
-      Progression.tick(state, step);
-      Combat.tick(state, step);
+      Progression.tick(state, step, tuning);
+      Combat.tick(state, step, tuning);
       remaining -= step;
     }
     const after = totals(state);

@@ -51,4 +51,6 @@ Money purchases access and playthrough infrastructure. Five regions and ten hous
 
 ## Current implementation boundary
 
-Batch one established character creation, the application shell, versioned state, all planned job/skill/housing slots, and a small working Jobs/Skills/Shop slice. Batch two added automatic starter-region combat, retaliation, recovery, repeat farming, and permanent diminishing stat rewards. Batch three adds versioned local saves, migrations, autosaving, and up to seven days of offline progress using the same time engine as live play.
+Batch one established character creation, the application shell, versioned state, all planned job/skill/housing slots, and a small working Jobs/Skills/Shop slice. Batch two added automatic starter-region combat, retaliation, recovery, repeat farming, and permanent diminishing stat rewards. Batch three added versioned local saves, migrations, autosaving, and up to seven days of offline progress using the same time engine as live play.
+
+Batch four made the progression simulator use the real content and core game modules for classes, origins, jobs, skills, housing, combat, and monster rewards. The simulator now reports range-based outcomes across representative optimized, typical, casual, and inefficient-but-valid paths instead of relying on a separate ideal-route model.
